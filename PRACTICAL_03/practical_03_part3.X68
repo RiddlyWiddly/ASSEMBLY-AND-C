@@ -7,25 +7,14 @@
     ORG    $1000
 START:                  ; first instruction of program
 
-    LEA text, A1
-    MOVE #4,D0
-    TRAP #15
-    MOVE #14,D0
-    TRAP #15
-    MOVE #3,D0
-    TRAP #15
-    MOVE #11,D0
-    MOVE #$FF00,D1 ;clears screen
-    TRAP #15
-    
+    LEA HEALTH, A3
+    SUB.B #10, (A3)
 
     SIMHALT             ; halt simulator
 
-text dc.b 'Data Register: ',0
+HEALTH  dc.b    $64
 
     END    START        ; last line of source
-
-
 
 *~Font name~Courier New~
 *~Font size~10~
