@@ -1,0 +1,58 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 04/02/2025 10:05:21
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00001000                             7      ORG    $1000
+00001000                             8  START:                  ; first instruction of program
+00001000                             9  
+00001000  11FC 0064 3000            10      MOVE.B  #100, $3000
+Line 11 ERROR: Immediate data exceeds 8 bits
+00001006  11FC 00E8 2000            11      MOVE.B  #1000, $2000
+0000100C  43F8 3000                 12      LEA     $3000, A1
+00001010  45F8 3000                 13      LEA     $3000, A2
+00001014  6100 000E                 14      BSR TAKING_DAMAGE
+00001018  6100 0010                 15      BSR BOSS_TAKING_DAMAGE
+0000101C                            16      
+0000101C                            17  BACK_IN_THE_GAME:
+0000101C  6100 0010                 18      BSR HEALTH_PICKUP
+00001020  6000 0012                 19      BRA GAME_END
+00001024                            20      
+00001024                            21  TAKING_DAMAGE:
+00001024  0411 0014                 22      SUB.B   #20, (A1)
+00001028  60F2                      23      BRA     BACK_IN_THE_GAME
+0000102A                            24      
+0000102A                            25  BOSS_TAKING_DAMAGE:
+0000102A  0412 0014                 26      SUB.B   #20, (A2)
+0000102E                            27  
+0000102E                            28  HEALTH_PICKUP:
+0000102E  0611 000A                 29      ADD.B   #10, (A1)
+00001032  4E75                      30      RTS
+00001034                            31      
+00001034                            32  GAME_END:
+00001034  12BC 0000                 33      MOVE.B  #$00, (A1)
+00001038                            34  
+00001038  FFFF FFFF                 35      SIMHALT             ; halt simulator
+0000103C                            36  
+0000103C                            37  * Put variables and constants here
+0000103C                            38  
+0000103C                            39      END    START        ; last line of source
+
+1 error detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+BACK_IN_THE_GAME    101C
+BOSS_TAKING_DAMAGE  102A
+GAME_END            1034
+HEALTH_PICKUP       102E
+START               1000
+TAKING_DAMAGE       1024

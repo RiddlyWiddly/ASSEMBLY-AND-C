@@ -7,9 +7,9 @@
     ORG    $1000
 START:                  ; first instruction of program
 
-    MOVE.L #%100, D0
-    MOVE.L #$100, D1
-    MOVE.L #100, D2
+    MOVE.L #%100, D0 ;binary
+    MOVE.L #$100, D1 ;decimal
+    MOVE.L #100, D2 ;hex
     
     MOVE.L D0, $3000
     MOVE.L D1, $3010
@@ -28,6 +28,7 @@ START:                  ; first instruction of program
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 *~Font name~Courier New~
 *~Font size~10~
