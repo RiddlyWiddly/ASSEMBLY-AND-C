@@ -7,31 +7,24 @@
     ORG    $1000
 START:                  ; first instruction of program
 
-    MOVE.L #ACHIEVEMENT_POINTS, A1
-    MOVE.L #0,D0
-    
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
-    
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
-    
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
+ INITIALISE:
+    MOVE.B #3, D0
+    MOVE.B #0, D1
+ GAME_LOOP:
+    CMP.B #1,D0
+    BNE GAME_POINTS
+    BNE GAME_OVER
+ GAME_POINTS:
+    ADD.B   #10, D1
+    SUB.B   #1, D0
+    BRA     GAME_LOOP
+ GAME_OVER:
 
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
+    SIMHALT             ; halt simulator
 
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
-    
-    ACHIEVEMENT_POINTS: DC.L     5,10,15,30
-    END:
-    
-    SIMHALT
+* Put variables and constants here
 
     END    START        ; last line of source
-
 
 *~Font name~Courier New~
 *~Font size~10~

@@ -6,29 +6,30 @@
 *-----------------------------------------------------------
     ORG    $1000
 START:                  ; first instruction of program
+    LEA PLAYER_POSITION, A1
+    LEA ENEMY_POSITION, A2
+    
+    MOVE.B #50, D1
+    MOVE.B #0, D2
+    
+COLLISION_CHECK:
+    CMP D2, D1
+    BLT NEXT_MOVE
+    BEQ COLLISION
+    
+NEXT_MOVE:
+    ADD.B #1, D2
+    BRA COLLISION_CHECK
+    
+COLLISION:
+    BRA GAME_OVER
+    
+GAME_OVER:
+    
+    SIMHALT             ; halt simulator
 
-    MOVE.L #ACHIEVEMENT_POINTS, A1
-    MOVE.L #0,D0
-    
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
-    
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
-    
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
-
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
-
-    MOVE.L   (A1)+, D2
-    ADD.L     D2, D0
-    
-    ACHIEVEMENT_POINTS: DC.L     5,10,15,30
-    END:
-    
-    SIMHALT
+PLAYER_POSITION: DC.B 55, 55
+ENEMY_POSITION: DC.B 55, 55
 
     END    START        ; last line of source
 
