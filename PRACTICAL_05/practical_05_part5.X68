@@ -13,8 +13,10 @@
 ;A1 for progress messages
 ;A2 used for PLAYER_X
 ;A3 used for ENEMY_POSITIONS
+;A4 used for powerup positions
 
 DAMAGE EQU 10
+HEAL   EQU 10
 
 START:                  ; first instruction of program
     LEA     PLAYER_X, A2
@@ -57,13 +59,23 @@ DRAW:
 COLLISION:
     MOVE.B  #1, D5
     LEA     ENEMY_POSITIONS, A3
+    LEA     POWER_UPS, A4
     
 ITERATE:
     CMP     D5, D4
     ADD.B   #1, D5
     BEQ     GAME_LOOP
+    BNE     CHECK_POWER_UPS
     BNE     CHECK_ENEMIES
     RTS
+
+CHECK_POWER_UPS:
+    MOVE.L  (A4)+, D2
+    MOVE.L  (A2), D3
+    
+    CMP.L   D2, D3
+    BEQ     HEAL_HEALTH
+    BNE     ITERATE
     
 CHECK_ENEMIES:
     MOVE.L  (A3)+, D2
@@ -78,6 +90,17 @@ REDUCE_HEALTH:
     BSR     DRAW
     
     SUB.B   #DAMAGE, PLAYER_HEALTH
+    
+    LEA     MSG_HEAL, A1
+    BSR     DRAW
+    
+    BRA     GAME_LOOP
+    
+HEAL_HEALTH:
+    LEA     MSG_COLLISION, A1
+    BSR     DRAW
+    
+    ADD.B   #HEAL, PLAYER_HEALTH
     
     LEA     MSG_DAMAGE, A1
     BSR     DRAW
@@ -109,15 +132,13 @@ MSG_GAMELOOP    DC.B    'GAME LOOP',0
 MSG_COLLISION   DC.B    'Collision',0
 MSG_GAMEOVER    DC.B    'GAME OVER',0
 MSG_DAMAGE      DC.B    'Taking damage',0
+MSG_HEAL      DC.B    'Being healed',0
 CRLF            DC.B    $0D,$0A,0
 ENEMY_POSITIONS DC.L    20,30,40,50,60,70,80,90,200,300,500,0
-    
+POWER_UPS       DC.L    20,30,40,50,60,70,80,90
+
 
 * Put variables and constants here
 
     END    START        ; last line of source
 
-*~Font name~Courier New~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
