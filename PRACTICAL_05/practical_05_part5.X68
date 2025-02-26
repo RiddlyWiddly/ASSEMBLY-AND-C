@@ -1,4 +1,5 @@
     ORG    $1000
+<<<<<<< HEAD
 ; D0 Used for trap codes and counting enemies
 ; D1 Used for player's health
 ; D2 Used for enemy positions
@@ -11,6 +12,20 @@
 
 DAMAGE EQU 10
 HEAL   EQU 20  ; Increased healing amount
+=======
+; D0 User for trap Codes, An Counting Enemies
+; D1 Used For Players Health
+; D2 USED for Enemy Positions
+; D4 used for Enemy count
+; A0 for counting enemies
+;A1 for progress messages
+;A2 used for PLAYER_X
+;A3 used for ENEMY_POSITIONS
+;A4 used for powerup positions
+
+DAMAGE EQU 10
+HEAL   EQU 10
+>>>>>>> 9a426097ca2a5be71aee95b7d3507679cf358399
 
 START:                  ; First instruction of the program
     LEA     PLAYER_X, A2
@@ -54,7 +69,11 @@ COLLISION:
     MOVE.B  #1, D5
     LEA     ENEMY_POSITIONS, A3
     LEA     POWER_UPS, A4
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 9a426097ca2a5be71aee95b7d3507679cf358399
 ITERATE:
     CMP     D5, D4
     ADD.B   #1, D5
@@ -66,11 +85,19 @@ ITERATE:
 CHECK_POWER_UPS:
     MOVE.L  (A4)+, D2
     MOVE.L  (A2), D3
+<<<<<<< HEAD
 
     CMP.L   D2, D3
     BEQ     HEAL_HEALTH
     BNE     ITERATE
 
+=======
+    
+    CMP.L   D2, D3
+    BEQ     HEAL_HEALTH
+    BNE     ITERATE
+    
+>>>>>>> 9a426097ca2a5be71aee95b7d3507679cf358399
 CHECK_ENEMIES:
     MOVE.L  (A3)+, D2
     MOVE.L  (A2), D3
@@ -84,8 +111,24 @@ REDUCE_HEALTH:
     BSR     DRAW
 
     SUB.B   #DAMAGE, PLAYER_HEALTH
+<<<<<<< HEAD
 
     LEA     MSG_HEAL, A1
+=======
+    
+    LEA     MSG_HEAL, A1
+    BSR     DRAW
+    
+    BRA     GAME_LOOP
+    
+HEAL_HEALTH:
+    LEA     MSG_COLLISION, A1
+    BSR     DRAW
+    
+    ADD.B   #HEAL, PLAYER_HEALTH
+    
+    LEA     MSG_DAMAGE, A1
+>>>>>>> 9a426097ca2a5be71aee95b7d3507679cf358399
     BSR     DRAW
 
     BRA     GAME_LOOP
@@ -121,6 +164,7 @@ END_COUNTING:
     RTS
 
 PLAYER_X        DC.L    1
+<<<<<<< HEAD
 PLAYER_HEALTH   DC.B    100
 MSG_HEALTH      DC.B    'Health: ', 0
 MSG_GAMELOOP    DC.B    'GAME LOOP', 0
@@ -138,3 +182,21 @@ POWER_UPS       DC.L    20, 30, 40, 50, 60, 70, 80, 90
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
+=======
+PLAYER_HEALTH   DC.B     100
+MSG_HEALTH      DC.B    'Health : ',0
+MSG_GAMELOOP    DC.B    'GAME LOOP',0
+MSG_COLLISION   DC.B    'Collision',0
+MSG_GAMEOVER    DC.B    'GAME OVER',0
+MSG_DAMAGE      DC.B    'Taking damage',0
+MSG_HEAL      DC.B    'Being healed',0
+CRLF            DC.B    $0D,$0A,0
+ENEMY_POSITIONS DC.L    20,30,40,50,60,70,80,90,200,300,500,0
+POWER_UPS       DC.L    20,30,40,50,60,70,80,90
+
+
+* Put variables and constants here
+
+    END    START        ; last line of source
+
+>>>>>>> 9a426097ca2a5be71aee95b7d3507679cf358399
