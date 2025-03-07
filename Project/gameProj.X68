@@ -1,4 +1,4 @@
-    ORG    $1000
+ORG    $1000
 EXIT    EQU 0            ; Used to exit the program
 
 START:
@@ -156,6 +156,7 @@ Truth:
     MOVE.B  #14, D0
     TRAP    #15              ; Print run message
     BSR     Choice3
+    RTS
 
 CHOICE3:
     LEA     CHOICE_MSG, A1   ; Load choice message
@@ -169,13 +170,22 @@ CHOICE3:
     MOVE.B  USER_INPUT, D1   ; Load user input into D1
 
     CMP.B   #'1', D1         ; Compare input to '1'
-    BEQ     Begin_Combat1          ; If '1', branch to Combat1
+    BEQ     FIGHT_BACK          ; If '1', branch to Combat1
 
     CMP.B   #'2', D1         ; Compare input to '2'
     BEQ     Run          ; If '2', branch to Run
 
     BSR     INVALID_CHOICE   ; If input is invalid, show error
     BSR     CHOICE3           ; Repeat input prompt
+    RTS
+
+FIGHT_BACK:
+    BSR     ENDL
+    LEA     FIGHT_MSG, A1
+    MOVE.B  #14, D0
+    TRAP    #15              ; Print run message
+    BSR     Begin_Combat1
+    BSR     CHOICE4
     RTS
 
 Run:
@@ -236,6 +246,9 @@ BATTLE_LOOP:
     BEQ     PLAYER_ATTACK
     CMP.B   #'2', D1
     BEQ     PLAYER_HEAL
+    CMP.B   #'3', D1
+    BEQ     PLAYER_BUFF
+    
     BRA     BATTLE_LOOP
 
 PLAYER_ATTACK:
@@ -248,7 +261,7 @@ PLAYER_ATTACK:
     BEQ     MISS        ; If 0, attack misses
     
 HIT:
-    SUB.B   #2, ENEMY_HP ; Enemy takes 2 damage
+    SUB     #2, PLAYER_HP
     LEA     HIT_MSG, A1  
     MOVE.B  #14, D0
     TRAP    #15         ; Print hit message
@@ -260,6 +273,8 @@ PLAYER_HEAL:
     MOVE.B  #14, D0
     TRAP    #15         ; Print heal message
     BRA     ENEMY_TURN
+    
+PLAYER_BUFF:
 
 MISS:
     LEA     MISS_MSG, A1 
@@ -430,6 +445,8 @@ Truth_MSG:    DC.B 'The doctor begs you to stop he will explain what is actualy 
               
 Run_MSG:      DC.B 'after trying to run you realise that you are cornered and have to fight' , $0D, $0A, 0
 
+FIGHT_MSG:    DC.B 'You hold your ground and prepare for a fight' , $0D, $0A, 0
+
 Resist_MSG:    DC.B 'You find the doctor is acting suspisious and dont belive anything he says to you' ,$0D, $0A, 0
               
 Combat1_MSG:   DC.B 'you lunge at the doctor and attack him the doctor defends himself initiating combat', $0D, $0A, 0
@@ -462,13 +479,14 @@ Never_MSG:   DC.B '*Alert* pops up on your hud with a shadowy figure explaining 
              DC.B 'remember being there but your memmories are of a dead man. All is needed now' ,$0D, $0A
              DC.B 'is whatever resembles your brain' $0D, $0A, 0
              
-Surgery_MSG: DC.B 'The doctor earned yout trust starting thr tests and surgery soon after killing you' ,$0D, $0A, 0
+Surgery_MSG: DC.B 'The doctor earned yout trust starting the tests and surgery soon after' ,$0D, $0A 
+             DC.B 'killing you' ,$0D, $0A, 0
 
-GoodEnding_MSG: DC.B 'you destroy yourself to stop anyone else having the same fate at least for a while' ,$0D, $0A, 0
+GoodEnding_MSG: DC.B 'you destroy yourself to stop anyone else having the same fate at least' ,$0D, $0A
+                DC.B 'for a while' ,$0D, $0A, 0
 
-BadEnding_MSG:  DC.B 'You try to flee and savyourself but as you try leave a squad is waiting for you they',$0D, $0A
-
-                DC.B 'shut you down stealing the data to cause more harm and torture others',$0D, $0A, 0
+BadEnding_MSG:  DC.B 'You try to flee and savyourself but as you try leave a squad is waiting for' ,$0D, $0A
+                DC.B 'you they shut you down stealing the data to cause more harm and torture others',$0D, $0A, 0
 
 
 
@@ -494,6 +512,17 @@ ENEMY_HP:       DS.B 1  ; Reserve 1 byte for enemy HP
 SCENE:          DS.B 1  ; to help load combat scenes
 
     END    START
+
+
+
+
+
+
+
+
+
+
+
 
 
 
